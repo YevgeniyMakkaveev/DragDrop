@@ -41,8 +41,8 @@ const App = () => {
     const res = localStorage.getItem("table-planner-2000");
     dispatch(loadState(JSON.parse(res)));
   };
-  const exportToConsole = () => {
-    console.log(JSON.stringify(images));
+  const exportToAlert = () => {
+    alert(JSON.stringify(images));
   };
   function downloadURI(uri, name) {
     const link = document.createElement("a");
@@ -55,6 +55,10 @@ const App = () => {
   const handleExport = () => {
     const uri = stageRef.current.toDataURL();
     downloadURI(uri, "stage.png");
+  };
+  const getExport = () => {
+    let getData = prompt("Test");
+    dispatch(loadState(JSON.parse(getData)));
   };
 
   return (
@@ -87,8 +91,11 @@ const App = () => {
         <button className="btn" onClick={() => loadJSON()}>
           Load
         </button>
-        <button className="btn" onClick={() => exportToConsole()}>
-          Coordinates to console
+        <button className="btn" onClick={() => exportToAlert()}>
+          Import
+        </button>
+        <button className="btn" onClick={() => getExport()}>
+          Export
         </button>
         <button className="btn" onClick={() => handleExport()}>
           SaveImg
@@ -96,6 +103,7 @@ const App = () => {
         <button className="btn" onClick={() => dispatch(clear())}>
           Clear
         </button>
+
         <Stage
           width={window.innerWidth}
           height={650}

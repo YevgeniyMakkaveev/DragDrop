@@ -16,7 +16,9 @@ const imgSlice = createSlice({
       toggledImg.y = y;
     },
     loadState(state, action) {
-      state.images = action.payload;
+      if (action.payload[0]) {
+        state.images = action.payload;
+      }
     },
     clear(state) {
       state.images = [];
