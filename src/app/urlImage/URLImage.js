@@ -1,11 +1,8 @@
 import { Image } from "react-konva";
-import { useSelector, useDispatch } from "react-redux";
 import useImage from "use-image";
 
 const URLImage = ({ image, dragHandle }) => {
   const [img] = useImage(image.src);
-  const dispatch = useDispatch();
-
   return (
     <Image
       id={image.id}

@@ -1,12 +1,18 @@
 import React from "react";
 import { Stage, Layer } from "react-konva";
-import URLImage from "./urlImage/URLImage";
+import URLImage from "./urlImage";
 import { useSelector, useDispatch, Provider } from "react-redux";
 import store from "../store";
-import { getImg, changeXY } from "../store/imageSlicer";
+import { getImg, changeXY, loadState, clear } from "../store/imageSlicer";
 import chair from "../data/chair.png";
 import table from "../data/table.png";
 import tumba from "../data/tumba.png";
+import carpet from "../data/carpet.png";
+import bed from "../data/bed.png";
+import wardrobe from "../data/wardrobe.png";
+import wall from "../data/wall.png";
+import oven from "../data/oven.png";
+import "./App.css";
 
 const App = () => {
   const dragUrl = React.useRef();
@@ -28,18 +34,43 @@ const App = () => {
   const dragEnd = (e) => {
     dispatch(changeXY({ id: e.target.id(), x: e.target.x(), y: e.target.y() }));
   };
+  const getJSON = () => {
+    localStorage.setItem("table-planner-2000", JSON.stringify(images));
+  };
+  const loadJSON = () => {
+    const res = localStorage.getItem("table-planner-2000");
+    dispatch(loadState(JSON.parse(res)));
+  };
+  const exportToConsole = () => {
+    console.log(JSON.stringify(images));
+  };
+  function downloadURI(uri, name) {
+    const link = document.createElement("a");
+    link.download = name;
+    link.href = uri;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+  const handleExport = () => {
+    const uri = stageRef.current.toDataURL();
+    downloadURI(uri, "stage.png");
+  };
+
   return (
     <div>
-      Try to trag and image into the stage:
       {makeImg(tumba, "tumba")}
       {makeImg(table, "table")}
       {makeImg(chair, "chair")}
+      {makeImg(bed, "bed")}
+      {makeImg(carpet, "carpet")}
+      {makeImg(wall, "wall")}
+      {makeImg(wardrobe, "wardrobe")}
+      {makeImg(oven, "oven")}
       <div
         onDrop={(e) => {
           e.preventDefault();
-          // register event position
           stageRef.current.setPointersPositions(e);
-          // add image
           dispatch(
             getImg({
               ...stageRef.current.getPointerPosition(),
@@ -50,16 +81,24 @@ const App = () => {
         }}
         onDragOver={(e) => e.preventDefault()}
       >
-        <button
-          onClick={() => {
-            console.log(images);
-          }}
-        >
-          Глянуть
+        <button className="btn" onClick={() => getJSON()}>
+          Save
+        </button>
+        <button className="btn" onClick={() => loadJSON()}>
+          Load
+        </button>
+        <button className="btn" onClick={() => exportToConsole()}>
+          Coordinates to console
+        </button>
+        <button className="btn" onClick={() => handleExport()}>
+          SaveImg
+        </button>
+        <button className="btn" onClick={() => dispatch(clear())}>
+          Clear
         </button>
         <Stage
           width={window.innerWidth}
-          height={window.innerHeight}
+          height={650}
           style={{ border: "1px solid grey" }}
           ref={stageRef}
         >
